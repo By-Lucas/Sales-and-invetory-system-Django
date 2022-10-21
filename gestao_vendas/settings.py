@@ -40,7 +40,8 @@ INSTALLED_APPS += [
     'products',
     'inventory',
     'sales_products',
-    'users'
+    'users',
+    'management'
 ]
 
 

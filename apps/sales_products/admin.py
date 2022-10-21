@@ -20,6 +20,3 @@ admin.site.register(SellProduct, SaleAdmin)
 @admin.register(Balance)
 class BalanceAdmin(admin.ModelAdmin):
     list_display = ('id', 'amount', 'date_update', 'date_order')
-
-
-
