@@ -27,7 +27,7 @@ class Products(models.Model):
     value = models.DecimalField(max_digits=9, decimal_places=2)
     quantity = models.IntegerField(default=1, null=True, blank=True)
     status = models.BooleanField(default=True)
-    image = models.ImageField(upload_to=upload_to)
+    image = models.ImageField(upload_to=upload_to, default='img.png', null=True, blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
