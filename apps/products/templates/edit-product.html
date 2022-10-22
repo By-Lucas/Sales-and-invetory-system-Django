@@ -10,8 +10,9 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Editar: <strong> {{ object.name }}</strong></h1>
-        <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-right"><i
                 class="fas fa-plus-square text-white-50"></i> Cadastrar produto</a>
+                
     </div>
 
     <form class="container" action="" method="POST" enctype="multipart/form-data">
@@ -19,9 +20,44 @@
         
         {{ form|as_bootstrap }}
 
-        <button class="btn btn-outline-primary" type="submit">Salvar</button>
+        <div class="row">
+            <div class="md-sm">
+                <button class="d-none d-sm-inline-block btn btn-sm btn-outline-success shadow-sm float-right" type="submit">Salvar</button>
+            </div>
+            <div class="md-sm">
+                <a class="d-none d-sm-inline-block btn btn-sm btn-outline-danger shadow-sm float-right" href="#" data-toggle="modal" data-target="#deleteModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Deletar
+                </a>
+            </div>
+        </div>
     </form>
 
+</div>
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deseja sair?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form  action="{% url 'product-delete' object.pk %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">Selecione "Logout" abaixo se estiver pronto para encerrar sua sessão atual.</div>
+                <div class="modal-footer">
+                    <button class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm float-right" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm float-right" type="submit">Deletar</button>
+                </div>
+            </form>
+            
+            
+        </div>
+    </div>
 </div>
 
 {% endblock body %}

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load bootstrap_tags %}
+
 
 {% block body %}
 
@@ -9,9 +11,18 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Cadastrar novo produto</h1>
-        <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-plus-square text-white-50"></i> Voltar</a>
+        <a href="{% url 'products' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-arrow-left text-white-50"></i> Voltar</a>
     </div>
+
+    <form class="container" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form|as_bootstrap }}
+
+        <button class="btn btn-outline-primary" type="submit">Cadastrar</button>
+        
+    </form>
 
 
 </div>

@@ -15,7 +15,20 @@
     </div>
     
         <!-- Section-->
-        <section class="py-5">
+        <section class="py-2">
+            <div class="container-fluid px-4 px-lg-5 mt-1">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert bg-gradient{{message.tags}} alert-dismissible fade show text-white" role="alert">
+                            <strong>Informação!</strong> {{ message }}
+                            <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+              </div>
+            
             <div class="container-fluid px-4 px-lg-5 mt-1">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center">
                     

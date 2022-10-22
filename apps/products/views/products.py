@@ -1,18 +1,18 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import redirect, render, HttpResponse
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.messages import constants
+
 from sales_products.models.sales import SellProduct
-
-
 from products.models.products import Products
 
 
 class ProductsView(ListView):
     template_name = 'products.html'
     model = Products
-    # Cada empresa verá apenas seus funcionários
     def get_queryset(self):
         #empresa_logada = self.request.user.funcionario.empresa
         return Products.objects.all()
@@ -43,6 +43,17 @@ class EditproductView(UpdateView):
             'quantity', 'status', 
             'image']
 
+    def form_valid(self, form) -> HttpResponse:
+        if form.is_valid():
+            by_user = form.save(commit=False)
+            by_user.created_by = self.request.user
+            by_user.save()
+
+            messages.add_message(self.request, constants.SUCCESS, f"O produto '{by_user.name}' atualizado com sucesso.")
+            return super(EditproductView, self).form_valid(form)
+        else:
+             messages.add_message(self.request, constants.ERROR, "Produto não pôde ser atualizado.")
+
 
 class CreateProductView(CreateView):
     template_name = "create-product.html"
@@ -52,10 +63,15 @@ class CreateProductView(CreateView):
             'image']
 
     def form_valid(self, form):
-        #Enviar o commit mas nao salvar no banco ate ser feito algumas coisas antes
-        prod = form.save(commit=False)
-        prod.save()
-        return super(CreateProductView, self).form_valid(form)
+        if form.is_valid():
+            by_user = form.save(commit=False)
+            by_user.created_by = self.request.user
+            by_user.save()
+
+            messages.success(self.request, f"O produto '{by_user.name}' cadastrado com sucesso.")
+            return super(CreateProductView, self).form_valid(form)
+        else:
+             messages.add_message(self.request, constants.ERROR, f"O produto {by_user.name} não pôde ser cadastrado.")
 
 
 class DeleteProductView(DeleteView):
