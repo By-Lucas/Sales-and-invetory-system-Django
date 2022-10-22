@@ -41,7 +41,9 @@ INSTALLED_APPS += [
     'inventory',
     'sales_products',
     'users',
-    'management'
+    'management',
+
+    'django_forms_bootstrap'
 ]
 
 

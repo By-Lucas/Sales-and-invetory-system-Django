@@ -9,20 +9,13 @@ from sales_products.models.sales import SellProduct
 from products.models.products import Products
 
 
-
-class ProductsView(TemplateView):
+class ProductsView(ListView):
     template_name = 'products.html'
-
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(ProductListView, self).get_context_data(*args, **kwargs)
-    #     print(context)
-    #     return context
-    def get(self, request):
-        produtos = Products.objects.all()
-        context = {
-            'products': produtos,
-        }
-        return render(request, self.template_name, context)
+    model = Products
+    # Cada empresa verá apenas seus funcionários
+    def get_queryset(self):
+        #empresa_logada = self.request.user.funcionario.empresa
+        return Products.objects.all()
 
 
 class ProductDetailView(DetailView):

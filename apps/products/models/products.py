@@ -1,8 +1,9 @@
-from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, m2m_changed
+from django.urls import reverse
 import random
+from PIL import Image
 
 
 def upload_to(instance ,filename):
@@ -33,10 +34,9 @@ class Products(models.Model):
 
 
     """Aqui servirá para mostrar apenas produtos do usuario"""
-    # @staticmethod
-    # def get_produts_by_user(usuario_id):
-    #     return Products.objects.filter(created_by=usuario_id).order_by('-date_update')
-
+    @staticmethod
+    def get_produts_by_user(usuario_id):
+        return Products.objects.filter(created_by=usuario_id).order_by('-date_update')
 
     class Meta:
         db_table = 'products'
@@ -47,6 +47,19 @@ class Products(models.Model):
     
     def __str__(self) -> str:
         return self.name
+
+
+    def get_absolute_url(self):
+        return reverse('products')
+
+    
+    def save(self, *args, **kwargs):
+        super(Products, self).save(*args, **kwargs)
+        imag = Image.open(self.image.path)
+        if imag.width > 200 or imag.height> 200:
+            output_size = (200, 200)
+            imag.thumbnail(output_size)
+            imag.save(self.image.path)
 
 
 def pre_save_product_receiver(sender, instance, *args, **kwargs):
