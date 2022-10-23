@@ -10,8 +10,8 @@ class SalesForm(forms.ModelForm):
             'sold_by',
             'product',
             'quantity',
-            'unit_price',
-            'amount',
+            # 'unit_price',
+            # 'amount',
             'order_status'
         ]
 

@@ -35,32 +35,29 @@ class SellProductView(CreateView):
 
 
 def sell_produc(request):
-    
-    form = SalesForm(request.POST)
 
     id = int(request.POST.get('id'))
     name = request.POST.get('name')
     user = request.user
-    qtf = int(request.POST.get('quantity_sell'))
+    qtd = int(request.POST.get('quantity_sell'))
     value = float(request.POST.get('value').replace(',', '.'))
-    unit_price = request.POST.get('unit_price')
-    amount = qtf * value
-    
-    if form.is_valid():
-        by_user = form.save(commit=False)
 
-        by_user.sold_by = user
-        by_user.product = name
-        by_user.unit_price = value 
-        by_user.amount = amount
-        by_user.quantity = qtf
-        by_user.order_status = True
-        
-        by_user.save()
+    prod = Products.objects.get(id=id)
+
+    erro = None
+    if any([qtd <= 0, value <= 0]):
+        erro = 'A quantidade ou valor do produto deve ser maior que 0'
+
+    if all([erro == None, id > 0, name != '', user != '']):
+        venda = SellProduct.objects.create(
+            sold_by=user, product=prod,
+            quantity=qtd,
+            order_status=True
+        )
 
         messages.success(request, f"O produto '{name}' foi vendido")
         return redirect('products')
 
     else:
-        messages.add_message(request, constants.ERROR, f"O produto '{name}' deu erro na venda.")
+        messages.add_message(request, constants.ERROR, f"Erro ao fazer a venda do produto' {name}: {erro}")
         return redirect('products')

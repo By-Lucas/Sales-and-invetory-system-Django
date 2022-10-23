@@ -52,10 +52,10 @@ class CartManager(models.Manager):
 class SellProduct(models.Model):
     code_sale = models.IntegerField(default=generate_id, editable=False)
     sold_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.CharField(max_length=50, null=False, blank=False)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1, null=True, blank=True)
-    unit_price = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True)
-    amount = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True)
+    unit_price = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True, editable=False)
+    amount = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True, editable=False)
     order_status = models.BooleanField(default=True)
     date_sale = models.DateTimeField(auto_now_add=True)
 
@@ -78,17 +78,17 @@ class SellProduct(models.Model):
 
 
     def __str__(self) -> str:
-        return self.product
+        return self.product.name
 
 
-# def pre_save_sales_receiver(sender, instance, *args, **kwargs):
-#     #if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+def pre_save_sales_receiver(sender, instance, *args, **kwargs):
+    #if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
 
-#     if instance.order_status:
-#         instance.amount =  (instance.quantity * instance.product.value)
-#         instance.unit_price =  instance.product.value
+    if instance.order_status == True:
+        instance.amount =  (instance.quantity * instance.product.value)
+        instance.unit_price =  instance.product.value
         
-#     else:
-#         instance.amount = instance.amount
+    else:
+        instance.amount = instance.amount
 
-# pre_save.connect(pre_save_sales_receiver, sender = SellProduct)
+pre_save.connect(pre_save_sales_receiver, sender = SellProduct)
