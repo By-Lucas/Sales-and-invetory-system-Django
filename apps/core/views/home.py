@@ -7,6 +7,8 @@ from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.contrib.messages import constants
 
+from sales_products.models.balance import Balance
+
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -16,10 +18,26 @@ class HomeView(TemplateView):
     #     print(context)
     #     return context
     def get(self, request):
-        #carrinho = Carrinho.objects.all()
+        balance = Balance.objects.all()
         #produtos = ProdutoModel.objects.all()
+
+        day =  0 
+        month =  0 
+        week =  0 
+        amount_all =  0 
+
+        for amount in balance:
+            day = amount.amount_day
+            month = amount.amount_month
+            week = amount.amount_week
+            amount_all = amount.amount
+
         context = {
-            'produtos': 'produtos',
+            'day': day,
+            'month': month,
+            'week': week,
+            'amount_all': amount_all,
+            'balance': balance,
             'carrinho':'carrinho'
         }
         return render(request, self.template_name, context)

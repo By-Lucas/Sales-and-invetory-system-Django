@@ -7,7 +7,7 @@ import random
 class Balance(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=9, default=0.00)
     amount_day = models.DecimalField(decimal_places=2, max_digits=9, default=0.00)
-    amoun_week = models.DecimalField(decimal_places=2, max_digits=9, default=0.00)
+    amount_week = models.DecimalField(decimal_places=2, max_digits=9, default=0.00)
     amount_month = models.DecimalField(decimal_places=2, max_digits=9, default=0.00)
     date_order = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
