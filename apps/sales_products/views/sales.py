@@ -1,37 +1,50 @@
-from venv import create
-from django.shortcuts import redirect, render, HttpResponse
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.http import Http404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.messages import constants
 
 from sales_products.models.sales import SellProduct
+from sales_products.models.balance import Balance
 from products.models.products import Products
 from sales_products.forms.sales_form import SalesForm
 
+from datetime import datetime, timedelta
 
-class SellProductView(CreateView):
-    #template_name = "create-product.html"
-    model = SellProduct
-    fields=['product', 'quantity']
 
-    def form_valid(self, form):
-        if form.is_valid():
-            id = self.request.POST.get('product')
-            prod = Products.objects.filter(id=id)
+def calculate_balance():
 
-            by_user = form.save(commit=False)
-            by_user.sold_by = self.request.user
-            by_user.product = prod
-            by_user.quantity = self.request.POST.get('quantity_sell')
-            by_user.save()
+    sell = SellProduct.objects.all()
+    all_amount = 0
+    day_amount = 0
+    week_amount = 0
+    month_amount = 0
 
-            messages.success(self.request, f"O produto '{by_user.name}' foi vendido")
-            return super(SellProductView, self).form_valid(form)
-        else:
-             messages.add_message(self.request, constants.ERROR, f"O produto '{by_user.name}' deu erro na venda.")
+    for sell_product in sell:
+        all_amount += sell_product.amount
+
+        if sell_product.date_sale.hour > 0 and sell_product.date_sale.hour < 23  and sell_product.date_sale.minute > 1 and sell_product.date_sale.minute < 59 :
+            day_amount += sell_product.amount
+
+        if sell_product.date_sale - timedelta(days=7):
+            week_amount += sell_product.amount
+        
+        if sell_product.date_sale.month > 0 and sell_product.date_sale.month < 31  or sell_product.date_sale.month < 28 or sell_product.date_sale.month  < 29 or sell_product.date_sale.month  < 30 :
+            month_amount += sell_product.amount
+
+        if sell_product.date_sale.hour % 23 == 0 and sell_product.date_sale.minute % 59 == 0:
+            print(sell_product.date_sale )
+
+    data = dict()
+    data['day'] = day_amount
+    data['week'] = week_amount
+    data['month'] = month_amount
+    data['all'] = all_amount
+
+    print(data)
+
+    return data
 
 
 def sell_produc(request):
@@ -54,7 +67,12 @@ def sell_produc(request):
             quantity=qtd,
             order_status=True
         )
+        if not Balance.objects.exists():
+            balance = Balance.objects.create(amount=calculate_balance()['all'])
+        else:
+            balance = Balance.objects.update(amount=calculate_balance()['all'])
 
+        
         messages.success(request, f"O produto '{name}' foi vendido")
         return redirect('products')
 
