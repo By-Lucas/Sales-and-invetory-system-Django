@@ -30,7 +30,7 @@ def calculate_balance():
         if sell_product.date_sale.hour > 0 and sell_product.date_sale.hour < 23  and sell_product.date_sale.minute > 1 and sell_product.date_sale.minute < 59 :
             day_amount += sell_product.amount
 
-        if days[0:7]:
+        if len(days[0:7]) > 0:
             week_amount += sell_product.amount
         
         if sell_product.date_sale.month > 0 and sell_product.date_sale.month < 31  or sell_product.date_sale.month < 28 or sell_product.date_sale.month  < 29 or sell_product.date_sale.month  < 30 :
