@@ -45,4 +45,4 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
 
 
 class LogoutView(auth_views.LogoutView):
-    next_page = 'produtos'
+    next_page = 'products'
