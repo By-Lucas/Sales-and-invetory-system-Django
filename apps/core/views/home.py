@@ -58,7 +58,7 @@ class HomeView(TemplateView):
             'week': week_amount,
             'amount_all': all_amount,
             'quantity': quantity,
-            'sell_products': sell_month[:5]
+            'sell_products': sell_month[:10]
         }
         return render(request, self.template_name, context)
 
