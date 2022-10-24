@@ -4,7 +4,8 @@ from products.views.products import (
                                     CreateProductView,
                                     ProductDetailView,
                                     DeleteProductView,
-                                    EditproductView)
+                                    EditproductView,
+                                    backup_products)
 
 
 urlpatterns = [
@@ -13,5 +14,6 @@ urlpatterns = [
     path('detalhes/<int:pk>', ProductDetailView.as_view(), name='product-detail'),
     path('editar/<int:pk>', EditproductView.as_view(), name='product-edit'),
     path('deletar/<int:pk>', DeleteProductView.as_view(), name='product-delete'),
+    path('backup', backup_products, name='backup_products')
 
 ]

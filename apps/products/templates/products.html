@@ -10,6 +10,20 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Produtos</h1>
+
+        <!-- Topbar Search -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-5 my-2 my-md-0 mw-100 navbar-search col-md-4" method="GET">
+            <div class="input-group">
+                <input name="q" value="{{ request.GET.q }}" type="search" class="form-control bg-light border-1 small" placeholder="Pesquisar produtos"
+                    aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
         <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-plus-square text-white-50"></i> Cadastrar produto</a>
     </div>
@@ -31,7 +45,7 @@
             
             <div class="container-fluid px-4 px-lg-5 mt-1">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center">
-                    {% for product in object_list %}
+                    {% for product in producs %}
                         <form action="{% url 'sell-product' %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="col mb-5">
@@ -69,15 +83,34 @@
                             </div>
                         </form>
                     {% endfor %}
-                
                 </div>
             </div>
-        </section>
+    </section>
        
+    <nav aria-label="Navegação de página exemplo">
+        <ul class="pagination justify-content-center" style="justify-content: center; display: flex;">
+            {% if posts.has_previous != 0 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Anterior</a>
+                </li>
+            {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="#">{{ posts.number }} de {{ posts.paginator.num_pages }}</a>
+                </li>
+            {% if posts.has_next %}
+            <li class="page-item ">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Próxima</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 
 </div>
 <!-- /.container-fluid -->
-
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

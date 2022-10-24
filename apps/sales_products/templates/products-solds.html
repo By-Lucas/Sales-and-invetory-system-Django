@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-5">
+        <h1 class="h3 mb-0 text-gray-800">Todas as vendas</h1>
+
+        <!-- Topbar Search -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-5 my-2 my-md-0 mw-100 navbar-search col-md-4" method="GET">
+            <div class="input-group">
+                <input name="q" value="{{ request.GET.q }}" type="search" class="form-control bg-light border-1 small" placeholder="Pesquisar vendas"
+                    aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <a href="{% url 'backup_products_sold' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Fazer backup
+        </a>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="container-fluid px-4 px-lg-5 mt-1">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert bg-gradient{{message.tags}} alert-dismissible fade show text-white" role="alert">
+                        <strong>Informação!</strong> {{ message }}
+                        <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                {% endfor %}
+            {% endif %}
+          </div>
+        <!-- Area Chart -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Todas as vendas</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <div class="table-responsive-sm">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr  class="text-center">
+                                <th scope="col">Código</th>
+                                <th scope="col">Produto</th>
+                                <th scope="col">Preço unitário</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Deletar</th>
+                            </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {{paginator}}
+                            {% for sell_prod in posts %}
+                            
+                            <tr class="text-center">
+                                <th scope="row">{{sell_prod.code_sale}}</th>
+                                <td>{{sell_prod.product}}</td>
+                                <td>{{sell_prod.unit_price}}</td>
+                                <td>{{sell_prod.quantity}}</td>
+                                <td>{{sell_prod.amount}}</td>
+                                <td>{{sell_prod.date_sale}}</td> <!-- Mostrar a quanto tempo : timesince-->
+                                <td>
+                                    <form action="{% url 'delete_produc_sold' sell_prod.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm float-left col-md-12" type="submit">
+                                            <i class="fas fa-trash mt-1 fa-sm fa-fw text-gray-100 float-left"></i>
+                                            Deletar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav aria-label="Navegação de página exemplo">
+        <ul class="pagination justify-content-center" style="justify-content: center; display: flex;">
+            {% if posts.has_previous != 0 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Anterior</a>
+                </li>
+            {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="#">{{ posts.number }} de {{ posts.paginator.num_pages }}</a>
+                </li>
+            {% if posts.has_next %}
+            <li class="page-item ">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Próxima</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock body %}
