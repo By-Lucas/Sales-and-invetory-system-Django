@@ -1,12 +1,15 @@
 from multiprocessing import context
 from django.shortcuts import redirect, render, HttpResponse
-from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, DeleteView
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.db.models import Q
 
 from django.contrib import messages
 from django.contrib.messages import constants
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from sales_products.models.sales import SellProduct
 from sales_products.models.balance import Balance
@@ -62,6 +65,7 @@ def calculate_balance():
     return data
 
 
+@login_required(login_url=reverse_lazy('login'))
 def sell_produc(request):
     id = int(request.POST.get('id'))
     name = request.POST.get('name')
@@ -109,8 +113,9 @@ def sell_produc(request):
         return redirect('products')
 
 
-class ProductsSoldView(ListView):
+class ProductsSoldView(LoginRequiredMixin, ListView):
     template_name = 'products-solds.html'
+    redirect_field_name = 'login'
     model = SellProduct
 
     def get(self, request, *args, **kwargs):
@@ -138,8 +143,9 @@ class ProductsSoldView(ListView):
 
 
 
-class DeleteProductsSoldView(DeleteView):
+class DeleteProductsSoldView(LoginRequiredMixin, DeleteView):
     model = SellProduct
+    redirect_field_name = 'login'
     success_url = reverse_lazy('all_producs_sold')
     
     def post(self, request, *args, **kwargs):
@@ -154,6 +160,7 @@ class DeleteProductsSoldView(DeleteView):
             return self.success_url.format(**self.object.__dict__)
 
 
+@login_required(login_url=reverse_lazy('login'))
 def backup_products_sold(request):
     queryset = SellProduct.objects.all()
     options = SellProduct._meta

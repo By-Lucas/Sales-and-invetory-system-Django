@@ -1,7 +1,9 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -10,9 +12,10 @@ from users.models.user_model import ProfileUser
 from users.forms.form_user import UserForm, SignUpForm, ProfileUserForm
 
 
-class SignUpView(CreateView):
+class SignUpView(LoginRequiredMixin, CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy('home')
+    redirect_field_name = 'login'
     template_name = 'register-user.html'
 
     def form_valid(self, form):
@@ -35,12 +38,13 @@ class SignUpView(CreateView):
         return context
 
 
-class ProfileUpdateView(TemplateView):
+class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'edit-profile.html'
+    redirect_field_name = 'login'
+    
     def get(self, request):
         user = request.user
         profile = user.profileuser
-        print(profile.imagem_perfil)
         user_form = UserForm(instance=user)
         profile_form = ProfileUserForm(instance=profile)
         context = {

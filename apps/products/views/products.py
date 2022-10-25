@@ -2,6 +2,9 @@ from django.shortcuts import redirect, render, HttpResponse
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -11,13 +14,15 @@ from django.contrib.messages import constants
 from sales_products.models.sales import SellProduct
 from products.models.products import Products
 
-
 import csv
 
 
-class ProductsView(ListView):
+
+class ProductsView(LoginRequiredMixin, ListView):
     template_name = 'products.html'
+    redirect_field_name = 'login'
     model = Products
+
     def get_queryset(self):
         #empresa_logada = self.request.user.funcionario.empresa
         return Products.objects.all()
@@ -47,11 +52,12 @@ class ProductsView(ListView):
         return self.render_to_response(context)
 
 
-class AllProductsView(ListView):
+class AllProductsView(LoginRequiredMixin, ListView):
     template_name = 'all-products.html'
+    edirect_field_name = 'login'
     model = Products
+
     def get_queryset(self):
-        #empresa_logada = self.request.user.funcionario.empresa
         return Products.objects.all()
 
     def get(self, request, *args, **kwargs):
@@ -79,8 +85,9 @@ class AllProductsView(ListView):
         return self.render_to_response(context)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     template_name = "detail-products.html"
+    edirect_field_name = 'login'
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
@@ -97,8 +104,9 @@ class ProductDetailView(DetailView):
         return instance
 
 
-class EditproductView(UpdateView):
+class EditproductView(LoginRequiredMixin, UpdateView):
     template_name = "edit-product.html"
+    edirect_field_name = 'login'
     model = Products
     fields=['name', 'value', 
             'quantity', 'status', 
@@ -116,8 +124,9 @@ class EditproductView(UpdateView):
              messages.add_message(self.request, constants.ERROR, "Produto não pôde ser atualizado.")
 
 
-class CreateProductView(CreateView):
+class CreateProductView(LoginRequiredMixin, CreateView):
     template_name = "create-product.html"
+    edirect_field_name = 'login'
     model = Products
     fields=['name', 'value', 
             'quantity', 'status', 
@@ -135,10 +144,10 @@ class CreateProductView(CreateView):
              messages.add_message(self.request, constants.ERROR, f"O produto {by_user.name} não pôde ser cadastrado.")
 
 
-class DeleteProductView(DeleteView):
+class DeleteProductView(LoginRequiredMixin, DeleteView):
     model = Products
+    edirect_field_name = 'login'
     success_url = reverse_lazy('products')
-
 
 def backup_products(request):
     queryset = Products.objects.all()

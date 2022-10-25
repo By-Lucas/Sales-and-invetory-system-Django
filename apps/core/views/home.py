@@ -1,27 +1,23 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import login, authenticate
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
-from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.contrib import messages
 from django.contrib.messages import constants
-from apps.sales_products.views.sales import sell_produc
 
-from sales_products.models.balance import Balance
 from sales_products.models.sales import SellProduct
 from datetime import datetime, timedelta
 from django.utils.timezone import utc
 
 
-
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
-
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(ProductListView, self).get_context_data(*args, **kwargs)
-    #     print(context)
-    #     return context
+    redirect_field_name = 'login'
 
     def get(self, request):
         sell_month = SellProduct.objects.all()
@@ -66,6 +62,7 @@ class HomeView(TemplateView):
 class LoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name = 'login.html'
     success_url = reverse_lazy('produtos')
+    
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             messages.error(self.request, f"""O usuário 

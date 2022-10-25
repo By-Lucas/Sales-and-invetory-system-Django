@@ -21,32 +21,32 @@ class UserForm(forms.ModelForm):
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True,  widget=forms.TextInput(
             attrs={
-                'class':'form-control','placeholder': 'Digite seu nome aqui'
+                'class':'form-control form-control-user','placeholder': 'Digite seu nome aqui'
             }
         ))
     last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(
             attrs={
-                'class':'form-control','placeholder': 'Digite seu sobrenome aqui'
+                'class':'form-control form-control-user','placeholder': 'Digite seu sobrenome aqui'
             }
         ))
     username = forms.CharField(max_length=120, required=True, widget=forms.TextInput(
             attrs={
-                'class':'form-control','placeholder': 'Digite seu usuário aqui'
+                'class':'form-control form-control-user','placeholder': 'Digite seu usuário aqui'
             }
         ))
     email = forms.EmailField(max_length=120, required=True, widget=forms.TextInput(
             attrs={
-                'class':'form-control','placeholder': 'Digite seu email aqui'
+                'class':'form-control form-control-user','placeholder': 'Digite seu email aqui'
             }
         ))
     password1 = forms.CharField(max_length=120, required=True, widget=forms.TextInput(
             attrs={
-                'class':'form-control','placeholder': 'Digite sua senha aqui'
+                'class':'form-control form-control-user','placeholder': 'Digite sua senha aqui'
             }
         ))
     password2 = forms.CharField(max_length=120, required=True, widget=forms.TextInput(
             attrs={
-                'class':'finput-group input-group-outline mb-3','placeholder': 'Confirme sua senha'
+                'class':'form-control form-control-user','placeholder': 'Confirme sua senha'
             }
         ))
     
