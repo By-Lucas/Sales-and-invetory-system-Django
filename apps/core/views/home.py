@@ -69,18 +69,16 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             messages.error(self.request, f"""O usuário 
-                        {self.request.user.first_name} 
-                        {self.request.user.last_name}
+                        {self.request.user.username} 
                         já está logado """)
-            return redirect(reverse_lazy("produtos"))
+            return redirect(reverse_lazy("home"))
         else:
             login(self.request, form.get_user())
             messages.success(self.request, f"""Seja bem vindo(a) 
-                            {self.request.user.first_name} 
-                            {self.request.user.last_name}
+                            {self.request.user.username} 
                             """)
-            return redirect(reverse_lazy("products"))
+            return redirect(reverse_lazy("home"))
 
 
 class LogoutView(auth_views.LogoutView):
-    next_page = 'products'
+    success_url = reverse_lazy('login')

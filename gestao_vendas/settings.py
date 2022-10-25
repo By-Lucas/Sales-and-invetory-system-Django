@@ -43,7 +43,8 @@ INSTALLED_APPS += [
     'users',
     'management',
 
-    'django_forms_bootstrap'
+    'django_forms_bootstrap',
+    'bootstrap_datepicker_plus'
 ]
 
 

@@ -26,6 +26,38 @@ class ProductsView(ListView):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
 
+        producs = Products.objects.filter(status=True).order_by('-date_create')
+        queryset = request.GET.get('q')
+        print(queryset)
+        if queryset:
+            producs = Products.objects.filter(
+                Q(code__icontains=queryset)|
+                Q(name__icontains=queryset)|
+                Q(value__icontains=queryset)|
+                Q(status__icontains=queryset)
+            )
+
+        paginator = Paginator(producs, 10)
+        page = self.request.GET.get('page')
+        posts = paginator.get_page(page)
+
+        context = dict()
+        context['producs'] = posts
+        
+        return self.render_to_response(context)
+
+
+class AllProductsView(ListView):
+    template_name = 'all-products.html'
+    model = Products
+    def get_queryset(self):
+        #empresa_logada = self.request.user.funcionario.empresa
+        return Products.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        allow_empty = self.get_allow_empty()
+
         producs = Products.objects.all().order_by('-date_create')
         queryset = request.GET.get('q')
         print(queryset)

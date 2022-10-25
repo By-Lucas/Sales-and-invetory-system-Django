@@ -63,7 +63,6 @@ class Products(models.Model):
 
 
 def pre_save_product_receiver(sender, instance, *args, **kwargs):
-    #products = instance.produto.all()
     
     if instance.code:
         # considere o 10 como uma taxa de entrega

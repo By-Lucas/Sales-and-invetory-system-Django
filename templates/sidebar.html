@@ -48,7 +48,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Demais Informações:</h6>
                 <a class="collapse-item" href="{% url 'all_producs_sold' %}">Todas das vendas</a>
-                <a class="collapse-item" href="cards.html">Produtos inativos</a>
+                <a class="collapse-item" href="{% url 'all-products' %}">Todos os produtos</a>
             </div>
         </div>
     </li>
@@ -64,9 +64,9 @@
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Demais Utilidades:</h6>
-                <a class="collapse-item" href="utilities-color.html">Novo produto</a>
-                <a class="collapse-item" href="utilities-border.html">Novo usuário</a>
-                <a class="collapse-item" href="utilities-animation.html">Editar perfil</a>
+                <a class="collapse-item" href="{% url 'create-product' %}">Novo produto</a>
+                <a class="collapse-item" href="{% url 'register_user' %}">Novo usuário</a>
+                <a class="collapse-item" href="{% url 'profile' %}">Editar perfil</a>
             </div>
         </div>
     </li>
@@ -89,7 +89,7 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Login Telas:</h6>
-                <a class="collapse-item" href="login.html">Login</a>
+                <a class="collapse-item" href="{% url 'login' %}">Login</a>
                 <a class="collapse-item" href="{% url 'home' %}admin">Administração</a>
                 <div class="collapse-divider"></div>
                 <!--<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
@@ -120,3 +120,24 @@
 
 </ul>
 <!-- End of Sidebar -->
+
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deseja sair?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Selecione "Logout" abaixo se estiver pronto para encerrar sua sessão atual.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
