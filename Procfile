@@ -1,0 +1,1 @@
+web gunicorn gestao_vendas.wsgi --log-file -
