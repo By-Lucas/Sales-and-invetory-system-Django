@@ -29,7 +29,7 @@ def home_carrinho(request):
 
     print(cart)
 
-    return render(request, 'icon-cart.html', context)
+    return render(request, 'products.html', context)
 
 
 def cart_update(request):

@@ -10,7 +10,6 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Produtos</h1>
-
         <!-- Topbar Search -->
         <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-5 my-2 my-md-0 mw-100 navbar-search col-md-4" method="GET">
             <div class="input-group">
@@ -24,8 +23,16 @@
             </div>
         </form>
 
-        <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-plus-square text-white-50"></i> Cadastrar produto</a>
+        <!--CARRINHO FLUTUANTE-->
+        <nav class="navbar navbar-expand navbar-light topbar mb-auto static-top">
+            <ul class="navbar-nav ml-auto">
+                {% include 'cart/icon-cart.html' %}
+            </ul>
+        </nav>
+
+        <a href="{% url 'create-product' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus-square text-white-50"></i> Cadastrar produto
+        </a>
     </div>
     
         <!-- Section-->
