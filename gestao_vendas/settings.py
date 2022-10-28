@@ -38,11 +38,12 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'core',
     'products',
+    'cart',
     'inventory',
     'sales_products',
     'users',
     'management',
-
+    
     'django_forms_bootstrap',
     'bootstrap_datepicker_plus'
 ]

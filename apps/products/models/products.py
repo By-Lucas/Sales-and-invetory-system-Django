@@ -48,11 +48,9 @@ class Products(models.Model):
     def __str__(self) -> str:
         return self.name
 
-
     def get_absolute_url(self):
         return reverse('products')
 
-    
     def save(self, *args, **kwargs):
         super(Products, self).save(*args, **kwargs)
         imag = Image.open(self.image.path)
@@ -66,9 +64,8 @@ def pre_save_product_receiver(sender, instance, *args, **kwargs):
     
     if instance.code:
         # considere o 10 como uma taxa de entrega
-        print(instance.name)
+        print('instance.name',instance.name)
     else:
         instance.value = 0.00
-    
         
 pre_save.connect(pre_save_product_receiver, sender = Products)
