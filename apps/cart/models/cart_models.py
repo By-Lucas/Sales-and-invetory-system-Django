@@ -7,9 +7,7 @@ import uuid
 User = settings.AUTH_USER_MODEL
 
 class CartManager(models.Manager):
-    def new_or_get(self, request, qtd):
-        quantidade = qtd
-        print('qtd', quantidade)
+    def new_or_get(self, request):
         cart_id = request.session.get("cart_id", None)
 
         print('cart_id', cart_id)

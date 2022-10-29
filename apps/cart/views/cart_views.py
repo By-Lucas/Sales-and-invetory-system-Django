@@ -1,8 +1,11 @@
+import re
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DeleteView, ListView
-
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
+
+from django.contrib import messages
+from django.contrib.messages import constants
 
 from cart.models.cart_models import Cart
 from products.models.products import Products
@@ -29,7 +32,7 @@ def home_carrinho(request):
 
     print(cart)
 
-    return render(request, 'products.html', context)
+    return render(request, 'base.html', context)
 
 
 def cart_update(request):
@@ -48,7 +51,7 @@ def cart_update(request):
             print("Mostrar mensagem ao usuário, esse produto acabou!")
             return redirect("products")
 
-        cart_obj, new_obj = Cart.objects.new_or_get(request, quantity_sell) 
+        cart_obj, new_obj = Cart.objects.new_or_get(request) 
         if produto_obj in cart_obj.produto.all():
             cart_obj.produto.remove(produto_obj) # cart_obj.products.remove(product_id)
             #cart_obj.produto.add(produto_obj)
@@ -59,16 +62,21 @@ def cart_update(request):
         qtd = 0
         for produto_qtd in cart_obj.produto.all():
             qtd+=1
+            if qtd == 0:
+                qtd = 0
         print('RRRR',qtd)
         request.session['cart_items'] = qtd
-
-        #print(produto_qtd.count())
 
     return redirect("products")
 
 
 def cart_remove(request, pk):
-    cart = Cart(request)
-    produto = get_object_or_404(Products, id=pk)
-    cart.remove(produto)
+    try:
+        cart , new_obj = Cart.objects.new_or_get(request) 
+        produto = get_object_or_404(Products, id=pk)
+        cart.produto.remove(produto)
+        messages.add_message(request, constants.SUCCESS, 'Produto removido com sucesso')
+
+    except Exception as e:
+        messages.error(request, constants.ERROR, 'Erro ao remover, erro: ', e)
     return redirect('products')

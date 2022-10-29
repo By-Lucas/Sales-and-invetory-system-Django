@@ -8,6 +8,6 @@ from cart.views.cart_views import cart_update, cart_remove, home_carrinho
 urlpatterns = [
     path('', cart_update, name='add_cart'),
     path('cart', home_carrinho, name='cart'),
-    path('remove/<int:id>', cart_remove, name='cart-remove'),
+    path('remove/<int:pk>', cart_remove, name='cart-remove'),
 
 ]

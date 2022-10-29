@@ -13,6 +13,7 @@ from django.contrib.messages import constants
 
 from sales_products.models.sales import SellProduct
 from products.models.products import Products
+from cart.models.cart_models import Cart
 
 import csv
 
@@ -48,6 +49,7 @@ class ProductsView(LoginRequiredMixin, ListView):
 
         context = dict()
         context['producs'] = posts
+        context['cart'] = Cart.objects.all()
         
         return self.render_to_response(context)
 
