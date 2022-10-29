@@ -78,14 +78,26 @@
                                             <div class="row justify-content-center">
                                             <!-- Product price-->
                                             <span class="text-muted text-decoration-line-through " style="font-size: 25px; margin-right: 5px;">R$ {{ product.value }}</span>
-                                            <input class="form-control col-md-3" name="quantity_sell" value="1" type="number" placeholder="Qtd"></div>
+                                            <input class="form-control col-md-3" name="quantity" value="1" type="number" placeholder="Qtd"></div>
 
                                         </div>
                                     </div>
                                     <!-- Product actions-->
                                     
                                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                        <div class="text-center"><button class="btn btn-outline-dark mt-auto" href="">Adicionar</button></div>
+                                        <div class="text-center">
+                                            {% for prod in cart %}
+                                                {% if product in prod.produto.all %}
+                                                    <button type="submit" class="btn btn-outline-danger mt-auto">
+                                                        Remover
+                                                    </button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-outline-success mt-auto">
+                                                        Adicionar
+                                                    </button>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -47,9 +47,10 @@ class ProductsView(LoginRequiredMixin, ListView):
         page = self.request.GET.get('page')
         posts = paginator.get_page(page)
 
+
         context = dict()
         context['producs'] = posts
-        context['cart'] = Cart.objects.all()
+        context['cart'] = Cart.objects.all() 
         
         return self.render_to_response(context)
 

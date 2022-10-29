@@ -5,9 +5,9 @@ from sales_products.models.sales import SellProduct
 
 class SaleAdmin(admin.ModelAdmin):
     readonly_fields = ('sold_by', )
-    list_display = ('product', 'quantity', 'unit_price', 'amount', 'order_status', 'date_sale')
+    list_display = ('quantity', 'unit_price', 'amount', 'order_status', 'date_sale')
     #list_editable = ('value',)
-    list_filter = ( 'product', 'order_status')
+    list_filter = ('order_status',)
 
     def save_model(self, request, obj, form, change):
         user_ = request.user

@@ -4,6 +4,7 @@ from django.db.models.signals import pre_save, post_save, m2m_changed
 import random
 
 from products.models.products import Products
+from cart.models.cart_models import Cart
 from .balance import Balance
 
 
@@ -19,7 +20,7 @@ def generate_id():
 class SellProduct(models.Model):
     code_sale = models.IntegerField(default=generate_id, editable=False)
     sold_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    product = models.CharField(max_length=265, null=True, blank=True)
     quantity = models.IntegerField(default=1, null=True, blank=True)
     unit_price = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True, editable=False)
     amount = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True, editable=False)
@@ -40,15 +41,15 @@ class SellProduct(models.Model):
         ordering = ('-date_sale',)
 
     def __str__(self) -> str:
-        return self.product.name
+        return f'{self.id}'
 
 
 def pre_save_sales_receiver(sender, instance, *args, **kwargs):
     #if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
 
     if instance.order_status == True:
-        instance.amount =  (instance.quantity * instance.product.value)
-        instance.unit_price =  instance.product.value
+        instance.amount =  instance.amount 
+        instance.unit_price =  instance.unit_price
     else:
         instance.amount = instance.amount
 

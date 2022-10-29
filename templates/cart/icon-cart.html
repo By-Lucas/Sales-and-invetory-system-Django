@@ -7,59 +7,43 @@
         <i class="fas fas fa-cart-plus fa-fw text-success mx-1" style="font-size:26px"></i>
         <!-- Counter - Alerts -->
         <span class="badge badge-danger badge-counter" style="font-size:15px">
+            {% if request.session.cart_items > 0 %}
                 {{ request.session.cart_items }}+
+            {% else %}
+                0
+            {% endif %}
         </span>
     </a>
     <!-- Dropdown - Alerts -->
     <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
         aria-labelledby="alertsDropdown">
-        <h6 class="dropdown-header">
-            Carrinho
-        </h6>
+        <h6 class="dropdown-header">Carrinho</h6>
 
-        
-        {% for cart in cart %}
-            {% for product in cart.produto.all %}
-                <form method='POST' action='{% url "cart-remove" product.id %}'> {% csrf_token %}
-                    <a class="dropdown-item d-flex align-items-center" href="#">
-                        <div class="mr-4">
-                            <div class="icon-circle align-items-center">
-                                <img class="mr-3 icon-circle fa-file-alt" src="{{product.image.url}}" alt="">
+        <form method='POST' action='{% url "sell_products" %} ' enctype="multipart/form-data"> {% csrf_token %}
+            {% for cart in cart %}
+                {% for product in cart.produto.all %}
+                    <input type="hidden" name="product_id" value="{{product.pk}}">
+                    <input type="hidden" name="cart_id" value="{{cart.pk}}">
+                    <input type="hidden" name="value" value="{{product.value}}">
+                    <input type="hidden" name="quantity" value="{{cart.quantity}}">
+
+
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="mr-4">
+                                <div class="icon-circle align-items-center">
+                                    <img class="mr-3 icon-circle fa-file-alt" src="{{product.image.url}}" alt="">
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <div class="small text-gray-500">{{cart.data_hora}}</div>
-                            <span class="font-weight-bold">{{product.name}}</span>
-                            <button type="submit" class="text-danger float-right">X</button>
-                            <input type="hidden" name="product_id", value="{{product.pk}}">
-                        </div>
-                    </a>
-                </form>
+                            <div>
+                                <div class="small text-gray-500">{{cart.data_hora|timesince}}</div>
+                                <span class="font-weight-bold text-center">{{product.name}} <span class="text-success">R${{product.value}}</span></span>
+                                <input type="hidden" name="produto_id" value="{{product.pk}}">
+                            </div>
+                        </a>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+            <button class="btn btn-success bg-success dropdown-item text-center small text-white" href="#">Vender</button>
+        </form>
         
-            <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                        <i class="fas fa-donate text-white"></i>
-                    </div>
-                </div>
-                <div>
-                    <div class="small text-gray-500">December 7, 2019</div>
-                    $290.29 has been deposited into your account!
-                </div>
-            </a>
-            <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                        <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                </div>
-                <div>
-                    <div class="small text-gray-500">December 2, 2019</div>
-                    Spending Alert: We've noticed unusually high spending for your account.
-                </div>
-            </a>
-            <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
     </div>
 </li>
