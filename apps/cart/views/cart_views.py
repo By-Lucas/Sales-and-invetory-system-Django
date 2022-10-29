@@ -1,5 +1,3 @@
-from itertools import product
-import re
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DeleteView, ListView
 from django.views.decorators.http import require_POST
@@ -12,6 +10,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import utc
 
 from cart.models.cart_models import Cart
+from cart.forms.cart_forms import CartForm
 from products.models.products import Products
 from sales_products.models.sales import SellProduct
 
@@ -37,15 +36,28 @@ def home_carrinho(request):
     return render(request, 'base.html', context)
 
 
+def valor(valor):
+    soma = 0
+    for numero in valor:
+        soma += numero
+    print(soma, ' Somando')
+    return soma
+
+
 def cart_update(request):
     print(request.POST)
-    quantity_sell = request.POST['quantity']
-    cart_obj = Cart.objects.all() 
-    total = cart_obj
+    valor_total = []
+
+    quantity_sell = int(request.POST['quantity'])
+    value = request.POST['value'].replace(',', '.')
+
+    valor_total.append(quantity_sell * float(value))
+    
+    valor(valor_total)
+
+    print(f'Valor = {str(valor_total)}')
 
     produto_id = request.POST.get('produto_id')
-
-    ad_info = Cart.objects.valores(request)
 
     
     if produto_id is not None:
@@ -57,15 +69,17 @@ def cart_update(request):
 
         cart_obj, new_obj = Cart.objects.new_or_get(request) 
         if produto_obj in cart_obj.produto.all():
-            cart_obj.produto.remove(produto_obj) # cart_obj.products.remove(product_id)
+            cart_obj.produto.remove(produto_obj)
             #cart_obj.produto.add(produto_obj)
         else:
             # E o produto se adiciona a instância do campo M2M 
-            cart_obj.produto.add(produto_obj) # cart_obj.products.add(product_id)
+           cart_obj.produto.add(produto_obj)
+           cart_add = Cart.objects.update(valor_total = 10)
+
         qtd = 0
         for produto_qtd in cart_obj.produto.all():
             qtd+=1
-        print('RRRR',qtd)
+            
         request.session['cart_items'] = qtd
 
     return redirect("products")
@@ -113,13 +127,37 @@ def calculate_balance():
 
     return data
 
-def sell_product(request):
+
+@require_POST
+def cart_add(request, pk):
+
     print(request.POST)
     id = request.POST.get('product_id')
     cart_id = int(request.POST.get('cart_id'))
     user = request.user
     qtd = request.POST.get('quantity')
     value = float(request.POST.get('value').replace(',', '.'))
+    amount = int(qtd) * value
+
+    cart=Cart(request)
+    produto = get_object_or_404(SellProduct, id=pk)
+    form = CartForm(request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        cart.add(produto=produto, quantidade=cd['quantidade'],overrride_quantity=cd['override'])
+    return redirect('products')
+
+
+@require_POST
+def sell_product(request):
+
+    print(request.POST)
+    id = request.POST.get('product_id')
+    cart_id = int(request.POST.get('cart_id'))
+    user = request.user
+    qtd = request.POST.get('quantity')
+    value = float(request.POST.get('value').replace(',', '.'))
+    amount = int(qtd) * value
 
 
     carts = Cart.objects.filter(id= cart_id)
@@ -132,15 +170,16 @@ def sell_product(request):
         if any([int(qtd) <= 0, value <= 0]):
             erro = 'A quantidade ou valor do produto deve ser maior que 0'
 
-        if user:
+        if user.is_authenticated:
             venda = SellProduct.objects.create(
                 sold_by=user, product=produtos,
                 quantity=int(qtd), unit_price=value,
-                order_status=True
+                order_status=True, amount=amount
             )
-    print(produtos)
+    print(venda)
 
-    return cart
+    return venda
+
 
 
 

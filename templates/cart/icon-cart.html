@@ -27,7 +27,6 @@
                     <input type="hidden" name="value" value="{{product.value}}">
                     <input type="hidden" name="quantity" value="{{cart.quantity}}">
 
-
                         <a class="dropdown-item d-flex align-items-center" href="#">
                             <div class="mr-4">
                                 <div class="icon-circle align-items-center">
@@ -41,8 +40,25 @@
                             </div>
                         </a>
                 {% endfor %}
+                <div class="dropdown-item bg-primary d-flex align-items-center" href="#">
+                    <div class="col bg-primary">
+                        <div class="align-items-center">
+                            <h4 class="font-weight-bold mt-3 text-success">{{cart.valor_total}}</h4>
+                        </div>
+                    </div>
+                    <div class="col">
+                        {% if request.session.cart_items > 0 %}
+                            <button class="btn btn-success  col-md-12 text-white">Vender</button>
+                        {% else %}
+                            <button class="btn btn-warning col-md-12 text-white" disabled>Sem produto</button>
+                        {% endif %}
+                    </div>
+                </div>
+                
+
             {% endfor %}
-            <button class="btn btn-success bg-success dropdown-item text-center small text-white" href="#">Vender</button>
+            
+            
         </form>
         
     </div>

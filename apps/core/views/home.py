@@ -35,7 +35,10 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
         # Filtrar por dia e semana
         for x in day:
-            week_amount += x.amount
+            if x.amount:
+                week_amount += x.amount
+            else:
+                week_amount = 0
 
             if x.date_sale.day == hoje.day :
                 day_amount += x.amount
