@@ -27,6 +27,7 @@ class Products(models.Model):
     name = models.CharField(max_length=50)
     value = models.DecimalField(max_digits=9, decimal_places=2)
     quantity = models.IntegerField(default=1, null=True, blank=True)
+    amunt_sell = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     status = models.BooleanField(default=True)
     image = models.ImageField(upload_to=upload_to, default='image.jpg', null=True, blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
@@ -63,6 +64,7 @@ class Products(models.Model):
 def pre_save_product_receiver(sender, instance, *args, **kwargs):
     
     if instance.code:
+        instance.amunt_sell = (instance.quantity * instance.value)
         # considere o 10 como uma taxa de entrega
         print('instance.name',instance.name)
     else:

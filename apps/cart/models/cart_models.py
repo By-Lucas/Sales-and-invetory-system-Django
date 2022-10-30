@@ -1,3 +1,4 @@
+from math import prod
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -87,9 +88,17 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
         total = 0
         desconto = 0
         taxas = 0
+        valor_produto = 0
         for produto in produtos:
-            total += produto.value
+            #total = instance.subtotal
+            produto.quantity = instance.quantity
+            total += produto.amunt_sell #(produto.value * instance.quantity)
+            
             desconto += produto.value / 100
+            instance.valor_produto = produto.value
+
+        instance.subtotal += total
+        instance.save()
 
         if instance.subtotal != total:
             instance.subtotal = total
@@ -97,7 +106,8 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
             
         #instance.valor_produto = total
         instance.desconto = desconto * total
-        instance.subtotal = total - instance.desconto
+        #instance.subtotal = total - instance.desconto
+        instance.subtotal = total
         instance.taxa_envio_outros = taxas
         #instance.valor_total += instance.valor_produto
         instance.save()
@@ -106,10 +116,10 @@ m2m_changed.connect(m2m_changed_cart_receiver, sender = Cart.produto.through)
 
 
 def pre_save_cart_receiver(sender, instance, *args, **kwargs):
-    if instance.valor_produto > 0:
+    if instance.quantity > 0:
         # considere o 10 como uma taxa de entrega
-        print(instance.valor_total)
-        instance.valor_total += instance.valor_produto
+        print(instance.quantity)
+        instance.valor_total = instance.subtotal
     else:
         instance.valor_total = instance.valor_total
         

@@ -35,7 +35,7 @@
                             </div>
                             <div>
                                 <div class="small text-gray-500">{{cart.data_hora|timesince}}</div>
-                                <span class="font-weight-bold text-center">{{product.name}} <span class="text-success">R${{product.value}}</span></span>
+                                <span class="font-weight-bold text-center">{{product.name}} <span class="text-success">R${{product.value}} / {{product.quantity}}</span></span>
                                 <input type="hidden" name="produto_id" value="{{product.pk}}">
                             </div>
                         </a>

@@ -50,14 +50,15 @@ def cart_update(request):
 
     quantity_sell = int(request.POST['quantity'])
     value = request.POST['value'].replace(',', '.')
+    id = int(request.POST['id'])
 
-    valor_total.append(quantity_sell * float(value))
+    valor_total = (quantity_sell * float(value))
     
-    valor(valor_total)
-
     print(f'Valor = {str(valor_total)}')
 
     produto_id = request.POST.get('produto_id')
+    cart_add = Cart.objects.update(quantity = quantity_sell, valor_produto=value)
+    update_quantity = Products.objects.filter(id= id).update(quantity= quantity_sell, amunt_sell=valor_total)
 
     
     if produto_id is not None:
@@ -74,8 +75,7 @@ def cart_update(request):
         else:
             # E o produto se adiciona a instância do campo M2M 
            cart_obj.produto.add(produto_obj)
-           cart_add = Cart.objects.update(valor_total = 10)
-
+           
         qtd = 0
         for produto_qtd in cart_obj.produto.all():
             qtd+=1
