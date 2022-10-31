@@ -8,10 +8,10 @@ class SalesForm(forms.ModelForm):
         model = SellProduct
         fields = [
             'sold_by',
-            'product',
-            'quantity',
+            'cart_product',
+            #'quantity',
             # 'unit_price',
             # 'amount',
-            'order_status'
+            #'order_status'
         ]
 

@@ -42,11 +42,12 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
             if x.date_sale.day == hoje.day :
                 day_amount += x.amount
+            print(day_amount, day_amount)
         
         # Filtrar por todas as vendas e mês
         for sell_product in sell_month:
             all_amount += sell_product.amount
-            quantity += sell_product.quantity
+            quantity += sell_product.cart_product.quantity
 
             if sell_product.date_sale.month > 0 and sell_product.date_sale.month < 31:
                 month_amount += sell_product.amount

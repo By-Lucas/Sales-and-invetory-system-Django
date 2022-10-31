@@ -31,10 +31,11 @@ class ProductsView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
+        cart , new_obj = Cart.objects.new_or_get(request) 
 
         producs = Products.objects.filter(status=True).order_by('-date_create')
         queryset = request.GET.get('q')
-        print(queryset)
+        
         if queryset:
             producs = Products.objects.filter(
                 Q(code__icontains=queryset)|
@@ -50,6 +51,7 @@ class ProductsView(LoginRequiredMixin, ListView):
 
         context = dict()
         context['producs'] = posts
+        context['cart_id'] = cart
         context['cart'] = Cart.objects.all() 
         
         return self.render_to_response(context)

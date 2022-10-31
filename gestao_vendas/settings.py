@@ -144,7 +144,7 @@ constants.DEBUG: '-primary',
 constants.ERROR: '-danger',
 constants.SUCCESS: '-success',
 constants.INFO: '-info',
-constants.WARNING: '-warning',
+constants.WARNING: '-warning'
 }
 
 

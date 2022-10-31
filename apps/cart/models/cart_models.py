@@ -9,17 +9,6 @@ User = settings.AUTH_USER_MODEL
 
 
 class CartManager(models.Manager):
-
-    def valores(self, request):
-        pd = dict()
-        pd['qtd'] = request.POST['quantity']
-        pd['value'] = request.POST['value']
-        pd['produto_id'] = list(request.POST['quantity'])
-        pd['name'] = request.POST['name']
-
-        print('pd', pd)
-        return pd
-
     def new_or_get(self, request):
         cart_id = request.session.get("cart_id", None)
         qs = self.get_queryset().filter(id=cart_id)
@@ -32,7 +21,6 @@ class CartManager(models.Manager):
             if request.user.is_authenticated and cart_obj.user is None:
                 cart_obj.user = request.user
                 cart_obj.save()
-                
         else:
             cart_obj = Cart.objects.new(user=request.user)
             new_obj = True
@@ -80,19 +68,15 @@ class Cart(models.Model):
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
-    #print(action)
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-        #print('instance',dir(instance))
-        #print(instance.total)
         produtos = instance.produto.all()
         total = 0
         desconto = 0
         taxas = 0
         valor_produto = 0
         for produto in produtos:
-            #total = instance.subtotal
             produto.quantity = instance.quantity
-            total += produto.amunt_sell #(produto.value * instance.quantity)
+            total += produto.amunt_sell
             
             desconto += produto.value / 100
             instance.valor_produto = produto.value
@@ -104,12 +88,9 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
             instance.subtotal = total
             instance.save()
             
-        #instance.valor_produto = total
         instance.desconto = desconto * total
-        #instance.subtotal = total - instance.desconto
         instance.subtotal = total
         instance.taxa_envio_outros = taxas
-        #instance.valor_total += instance.valor_produto
         instance.save()
 
 m2m_changed.connect(m2m_changed_cart_receiver, sender = Cart.produto.through)
@@ -117,8 +98,6 @@ m2m_changed.connect(m2m_changed_cart_receiver, sender = Cart.produto.through)
 
 def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     if instance.quantity > 0:
-        # considere o 10 como uma taxa de entrega
-        print(instance.quantity)
         instance.valor_total = instance.subtotal
     else:
         instance.valor_total = instance.valor_total

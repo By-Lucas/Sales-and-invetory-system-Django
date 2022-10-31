@@ -19,14 +19,13 @@
         aria-labelledby="alertsDropdown">
         <h6 class="dropdown-header">Carrinho</h6>
 
-        <form method='POST' action='{% url "sell_products" %} ' enctype="multipart/form-data"> {% csrf_token %}
+        <form method='POST' action='{% url "sell_products" cart_id %} ' enctype="multipart/form-data"> {% csrf_token %}
             {% for cart in cart %}
                 {% for product in cart.produto.all %}
                     <input type="hidden" name="product_id" value="{{product.pk}}">
                     <input type="hidden" name="cart_id" value="{{cart.pk}}">
                     <input type="hidden" name="value" value="{{product.value}}">
                     <input type="hidden" name="quantity" value="{{cart.quantity}}">
-
                         <a class="dropdown-item d-flex align-items-center" href="#">
                             <div class="mr-4">
                                 <div class="icon-circle align-items-center">
@@ -54,11 +53,7 @@
                         {% endif %}
                     </div>
                 </div>
-                
-
             {% endfor %}
-            
-            
         </form>
         
     </div>

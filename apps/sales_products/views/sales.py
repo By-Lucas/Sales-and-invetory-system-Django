@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from sales_products.models.sales import SellProduct
 from sales_products.models.balance import Balance
 from products.models.products import Products
-from sales_products.forms.sales_form import SalesForm
+#from sales_products.forms.sales_form import SalesForm
 
 from datetime import datetime, timedelta
 from django.utils.timezone import utc
@@ -79,7 +79,6 @@ def sell_produc(request):
     amount_week = get_balance['week']
     amount_month = get_balance['month']
 
-
     prod = Products.objects.get(id=id)
 
     erro = None
@@ -140,7 +139,6 @@ class ProductsSoldView(LoginRequiredMixin, ListView):
         context['posts'] = posts
         
         return self.render_to_response(context)
-
 
 
 class DeleteProductsSoldView(LoginRequiredMixin, DeleteView):

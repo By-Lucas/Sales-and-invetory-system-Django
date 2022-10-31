@@ -13,6 +13,7 @@ from cart.models.cart_models import Cart
 from cart.forms.cart_forms import CartForm
 from products.models.products import Products
 from sales_products.models.sales import SellProduct
+from sales_products.forms.sales_form import SalesForm
 
 
 
@@ -161,6 +162,14 @@ def sell_product(request):
 
 
     carts = Cart.objects.filter(id= cart_id)
+    sales_form = SalesForm(request.POST)
+    if sales_form.is_valid():
+        form = sales_form(commit=False)
+        form.cart_product = carts
+        form.save()
+        return redirect('products')
+
+    
     produtos = ''
     for cart in carts:
         for prod in cart.produto.all():
@@ -172,9 +181,7 @@ def sell_product(request):
 
         if user.is_authenticated:
             venda = SellProduct.objects.create(
-                sold_by=user, product=produtos,
-                quantity=int(qtd), unit_price=value,
-                order_status=True, amount=amount
+                sold_by=user, cart_product=carts,
             )
     print(venda)
 
@@ -182,14 +189,42 @@ def sell_product(request):
 
 
 
+def product_sell(request, pk):
+    print(request.POST)
+    produto_id = request.POST['product_id']
+    quantity = 0
 
-def cart_remove(request, pk):
-    try:
-        cart , new_obj = Cart.objects.new_or_get(request) 
-        produto = get_object_or_404(Products, id=pk)
-        cart.produto.remove(produto)
-        messages.add_message(request, constants.SUCCESS, 'Produto removido com sucesso')
+    cart_obj, new_obj = Cart.objects.new_or_get(request) 
 
-    except Exception as e:
-        messages.error(request, constants.ERROR, 'Erro ao remover, erro: ', e)
+    print('quantity', quantity)
+
+        
+
+    if produto_id is not None:
+        #cart = get_object_or_404(Cart, id=pk)
+
+        # Quantidade
+        for qtd in cart_obj.produto.all():
+            quantity += qtd.quantity
+        cart_sell  = SellProduct.objects.create(sold_by=request.user, 
+                                                cart_product=cart_obj, 
+                                                quantity=quantity)
+        messages.add_message(request, constants.SUCCESS, 'Venda efetuada com sucesso.')
+
+        try:
+            produto_obj = Products.objects.get(id= produto_id)
+        except Products.DoesNotExist:
+            print("Mostrar mensagem ao usuário, esse produto acabou!")
+            return redirect("products")
+
+        if produto_obj in cart_obj.produto.all():
+            for prod_remove in cart_obj.produto.all():
+                # Remover
+                cart_obj.produto.remove(prod_remove)
+
+            qtd = 0
+            request.session['cart_items'] = qtd
+        else:
+            print()
+
     return redirect('products')
