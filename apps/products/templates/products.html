@@ -52,43 +52,40 @@
             
             <div class="container-fluid px-4 px-lg-5 mt-1">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center">
-                
-                    <form action="{% url 'add_cart' %}" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% for product in producs %}
-                        <div class="col mb-5">
-                            <div class="card h-80">
-                                <!-- Sale badge-->
-                                <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Ativo</div>
-                                
-                                <!-- Product image-->
-                                <a href="{% url 'product-edit' product.pk %}">
-                                    <img class="card-img-top" src="{{ product.image.url }}" alt="..." style="width: 100% ; max-height: 190px;min-height: 190px;" />
-                                </a>
-                                <!-- Product details-->
-                                <div class="card-body p-3">
-                                    <input class="form-control col-md-3" name="value" value="{{ product.value }}" type="hidden" placeholder="Qtd">
-                                    <input class="form-control col-md-3" name="id" value="{{ product.id }}" type="hidden">
-                                    <input class="form-control col-md-3" name="produto_id" value="{{ product.id }}" type="hidden">
-                                    <input class="form-control col-md-3" name="name" value="{{ product.name }}" type="hidden" placeholder="Qtd">
+                    {% for product in producs %}
+                        <form action="{% url 'add_cart' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="col mb-5">
+                                <div class="card h-80">
+                                    <!-- Sale badge-->
+                                    <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Ativo</div>
+                                    
+                                    <!-- Product image-->
+                                    <a href="{% url 'product-edit' product.pk %}">
+                                        <img class="card-img-top" src="{{ product.image.url }}" alt="..." style="width: 100% ; max-height: 190px;min-height: 190px;" />
+                                    </a>
+                                    <!-- Product details-->
+                                    <div class="card-body p-3">
+                                        <input class="form-control col-md-3" name="value" value="{{ product.value }}" type="hidden" placeholder="Qtd">
+                                        <input class="form-control col-md-3" name="id" value="{{ product.id }}" type="hidden">
+                                        <input class="form-control col-md-3" name="produto_id" value="{{ product.id }}" type="hidden">
+                                        <input class="form-control col-md-3" name="name" value="{{ product.name }}" type="hidden" placeholder="Qtd">
 
-                                    <div class="text-center">
-                                        <!-- Product name-->
-                                        <h5 class="fw-bolder">{{ product.name }}</h5>
-                                        
-                                        <div class="row justify-content-center">
-                                        <!-- Product price-->
-                                        <span class="text-muted text-decoration-line-through " style="font-size: 25px; margin-right: 5px;">R$ {{ product.value }}</span>
-                                        <input class="form-control col-md-3" name="quantity" value="1" type="number" placeholder="Qtd"></div>
+                                        <div class="text-center">
+                                            <!-- Product name-->
+                                            <h5 class="fw-bolder">{{ product.name }}</h5>
+                                            
+                                            <div class="row justify-content-center">
+                                            <!-- Product price-->
+                                            <span class="text-muted text-decoration-line-through " style="font-size: 25px; margin-right: 5px;">R$ {{ product.value }}</span>
+                                            <input class="form-control col-md-3" name="quantity" value="1" type="number" placeholder="Qtd"></div>
 
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- Product actions-->
-                                
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center">
-                                        {% for prod in cart %}
-                                            {% if product in prod.produto.all %}
+                                    <!-- Product actions-->
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                        <div class="text-center">
+                                            {% if product in cart_id.produto.all %}
                                                 <button type="submit" class="btn btn-outline-danger mt-auto">
                                                     Remover
                                                 </button>
@@ -97,13 +94,12 @@
                                                     Adicionar
                                                 </button>
                                             {% endif %}
-                                        {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        {% endfor %}
-                    </form>
+                        </form>
+                    {% endfor %}
                 </div>
             </div>
     </section>

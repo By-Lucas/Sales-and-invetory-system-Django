@@ -20,50 +20,41 @@
         <h6 class="dropdown-header">Carrinho</h6>
 
         <form method='POST' action='{% url "sell_products" cart_id %} ' enctype="multipart/form-data"> {% csrf_token %}
-            {% if request.session.cart_items > 0 %}
-                {% for cart in cart %}
-                    {% for product in cart.produto.all %}
-                        <input type="hidden" name="product_id" value="{{product.pk}}">
-                        <input type="hidden" name="cart_id" value="{{cart.pk}}">
-                        <input type="hidden" name="value" value="{{product.value}}">
-                        <input type="hidden" name="quantity" value="{{cart.quantity}}">
-                            <a class="dropdown-item d-flex align-items-center" href="#">
-                                <div class="mr-4">
-                                    <div class="icon-circle align-items-center">
-                                        <img class="mr-3 icon-circle fa-file-alt" src="{{product.image.url}}" alt="">
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="small text-gray-500">{{cart.data_hora|timesince}}</div>
-                                    <span class="font-weight-bold text-center">{{product.name}} <span class="text-success">R${{product.value}} / {{product.quantity}}</span></span>
-                                    <input type="hidden" name="produto_id" value="{{product.pk}}">
-                                </div>
-                            </a>
-                    {% endfor %}
-                    <div class="dropdown-item bg-primary d-flex align-items-center" href="#">
-                        <div class="col bg-primary">
-                            <div class="align-items-center">
-                                <h4 class="font-weight-bold mt-3 text-success">{{cart.valor_total}}</h4>
+            {% for cart in cart %}
+                {% for product in cart.produto.all %}
+                    <input type="hidden" name="product_id" value="{{product.pk}}">
+                    <input type="hidden" name="cart_id" value="{{cart.pk}}">
+                    <input type="hidden" name="value" value="{{product.value}}">
+                    <input type="hidden" name="quantity" value="{{cart.quantity}}">
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-4">
+                            <div class="icon-circle align-items-center">
+                                <img class="mr-3 icon-circle fa-file-alt" src="{{product.image.url}}" alt="">
                             </div>
                         </div>
-                        <div class="col">
-                                <button class="btn btn-success  col-md-12 text-white">Vender</button>
+                        <div>
+                            <div class="small text-gray-500">{{cart.data_hora|timesince}}</div>
+                            <span class="font-weight-bold text-center">{{product.name}} <span class="text-success">R${{product.value}} / {{product.quantity}}</span></span>
+                            <input type="hidden" name="produto_id" value="{{product.pk}}">
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
-            {% else %}
-                <div class="dropdown-item bg-primary d-flex align-items-center" href="#">
-                    <div class="col bg-primary">
-                        <div class="align-items-center">
-                            <h4 class="font-weight-bold mt-3 text-success">{{cart.valor_total}}</h4>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-success  col-md-12 text-white">Vender</button>
-                        <button class="btn btn-warning col-md-12 text-white" disabled>Sem produto</button>
+            {% endfor %}
+            <div class="dropdown-item bg-primary d-flex align-items-center" href="#">
+                <div class="col bg-primary">
+                    <div class="align-items-center">
+                        <h4 class="font-weight-bold mt-3 text-success">{{cart.valor_total}}</h4>
                     </div>
                 </div>
-            {% endif %}
+                <div class="col">
+                    {% if cart_id.produto.all %}
+                        <button class="btn btn-success  col-md-12 text-white">Vender</button>
+                    {% else %}
+                        <button class="btn btn-warning col-md-12 text-white" disabled>Sem produto</button>
+                    {% endif %}
+                </div>
+            </div>
         </form>
+        
     </div>
 </li>
