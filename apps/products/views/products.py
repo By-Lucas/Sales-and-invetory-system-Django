@@ -52,6 +52,8 @@ class ProductsView(LoginRequiredMixin, ListView):
         context = dict()
         context['producs'] = posts
         context['cart_id'] = cart
+        for x in Cart.objects.all():
+            context['valor_total'] = x.valor_total
         context['cart'] = Cart.objects.all() 
         
         return self.render_to_response(context)
