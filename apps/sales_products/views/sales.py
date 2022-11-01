@@ -127,9 +127,9 @@ class ProductsSoldView(LoginRequiredMixin, ListView):
         if queryset:
             sell = SellProduct.objects.filter(
                 Q(code_sale__icontains=queryset)|
-                Q(product__name__icontains=queryset)|
-                Q(unit_price__icontains=queryset)|
-                Q(order_status__icontains=queryset)
+                Q(quantity__icontains=queryset)|
+                Q(amount__icontains=queryset)|
+                Q(date_sale__icontains=queryset)
             )
         paginator = Paginator(sell, 10)
         page = self.request.GET.get('page')

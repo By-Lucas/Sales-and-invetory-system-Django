@@ -80,6 +80,7 @@ class AllProductsView(LoginRequiredMixin, ListView):
                 Q(code__icontains=queryset)|
                 Q(name__icontains=queryset)|
                 Q(value__icontains=queryset)|
+                Q(date_create__icontains=queryset)|
                 Q(status__icontains=queryset)
             )
 
@@ -104,9 +105,7 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self, *args, **kwargs):
         pk = self.kwargs.get('id')
-        print(pk)
         instance = Products.objects.filter(pk=pk)
-        print(instance)
         if instance is None:
             raise Http404("Esse produto não existe!")
         return instance
