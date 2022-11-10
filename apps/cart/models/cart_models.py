@@ -46,7 +46,7 @@ class Cart(models.Model):
     valor_produto = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, help_text='Valor original do produto')
     desconto = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, help_text='Desconto do produto')
     subtotal = models.DecimalField(default = 0.00, max_digits=100, decimal_places = 2, help_text='Valor com desconto')
-    quantity = models.IntegerField(default=1)
+    quantity = models.BigIntegerField(default=1)
     valor_total = models.DecimalField(default = 0.00, max_digits=100, decimal_places = 2,  null=False, blank=False, help_text='Valor total a ser pago')
     atualizado_em = models.DateTimeField(auto_now=True)
     data_hora = models.DateTimeField(auto_now_add=True)

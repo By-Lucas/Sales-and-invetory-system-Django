@@ -14,11 +14,11 @@ def upload_to(instance ,filename):
 
 class ProfileUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    idade = models.IntegerField(null=True, blank=True, default=0, db_column='idade')
+    idade = models.BigIntegerField(null=True, blank=True, default=0, db_column='idade')
     cidade = models.CharField(max_length=20, null=True, blank=True, db_column='cidade')
     contato = models.CharField(max_length=11, null=True, blank=True, db_column='contato')
     endereco = models.CharField(max_length=20, null=True, blank=True, db_column='endereco')
-    numero_casa = models.IntegerField(null=True, blank=True, db_column='numero_casa')
+    numero_casa = models.BigIntegerField(null=True, blank=True, db_column='numero_casa')
     data_nascimento = models.DateField(null=True, blank=True, db_column='data_nascimento')
     imagem_perfil = models.ImageField(default='usuario.png', upload_to=upload_to, null=True, blank=True, db_column='imagem_perfil')
     data_cadastro = models.DateTimeField(auto_now_add=True, db_column='data_cadastro')

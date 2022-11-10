@@ -19,10 +19,10 @@ def generate_id():
 
 
 class SellProduct(models.Model):
-    code_sale = models.IntegerField(default=generate_id, editable=False)
+    code_sale = models.BigIntegerField(default=generate_id, editable=False)
     sold_by = models.ForeignKey(User, on_delete=models.CASCADE)
     cart_product = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
-    quantity = models.IntegerField(default=1, null=True, blank=True)
+    quantity = models.BigIntegerField(default=1, null=True, blank=True)
     amount = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True, editable=False)
     date_sale = models.DateTimeField(auto_now_add=True)
 
