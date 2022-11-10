@@ -22,11 +22,11 @@ def gerar_id():
 
 class Products(models.Model):
 
-    code = models.IntegerField(default=gerar_id, editable=False)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.BigIntegerField(default=gerar_id, editable=False)
+    created_by_user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     value = models.DecimalField(max_digits=9, decimal_places=2)
-    quantity = models.IntegerField(default=1, null=True, blank=True)
+    quantity = models.BigIntegerField(default=1, null=True, blank=True)
     amunt_sell = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
     status = models.BooleanField(default=True)
     image = models.ImageField(upload_to=upload_to, default='image.jpg', null=True, blank=True)

@@ -122,13 +122,14 @@ class EditproductView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form) -> HttpResponse:
         if form.is_valid():
             by_user = form.save(commit=False)
-            by_user.created_by = self.request.user
+            #by_user.created_by_user = self.request.user
             by_user.save()
 
             messages.add_message(self.request, constants.SUCCESS, f"O produto '{by_user.name}' atualizado com sucesso.")
             return super(EditproductView, self).form_valid(form)
         else:
-             messages.add_message(self.request, constants.ERROR, "Produto não pôde ser atualizado.")
+            messages.add_message(self.request, constants.ERROR, f"Produto '{by_user.name}' não pôde ser atualizado.")
+            return redirect('products') 
 
 
 class CreateProductView(LoginRequiredMixin, CreateView):
@@ -142,13 +143,13 @@ class CreateProductView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         if form.is_valid():
             by_user = form.save(commit=False)
-            by_user.created_by = self.request.user
+            by_user.created_by_user = self.request.user
             by_user.save()
 
             messages.success(self.request, f"O produto '{by_user.name}' cadastrado com sucesso.")
             return super(CreateProductView, self).form_valid(form)
         else:
-             messages.add_message(self.request, constants.ERROR, f"O produto {by_user.name} não pôde ser cadastrado.")
+            messages.add_message(self.request, constants.ERROR, f"O produto {by_user.name} não pôde ser cadastrado.")
 
 
 class DeleteProductView(LoginRequiredMixin, DeleteView):
